@@ -37,7 +37,7 @@ LSTM_OPTIMIZER = 'adam'
 EPOCHS = 50
 EVALUATION_INTERVAL = 200
 
-# tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(True)
 
 #  'well_num' => dfs_dic
 def to_dic_of_df(data, num_producer, num_model):
@@ -192,7 +192,7 @@ well_dic = to_dic_of_df(
     data = data,
     num_producer=NUM_WELL,
     num_model=NUM_MODEL
-    )
+)
 
 scaler = MinMaxScaler()
 date_index = get_date_index(data['TIME'], TRAIN_SPLIT)
