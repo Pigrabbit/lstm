@@ -34,9 +34,9 @@ def save_rmse(well_num, model_num, rmse):
 if __name__ == "__main__":
     #########################################
     # Setup
+    
     #########################################
     # Load and Read dataset
-    #########################################
     print("Setting up dataset reader")
     data_dir = pjoin(DATA_PATH, DATA_FILE_NAME)
     data = reader.load_data(data_dir)
@@ -51,6 +51,7 @@ if __name__ == "__main__":
     print("Choosing well and model...")
     well_num = '9'
     model_num = '1'
+
     dataset = reader.choose_well_and_model(data_dic, well_num, model_num)
     ##########################################
     # Preprocess the data according to LSTM architecture
@@ -105,5 +106,6 @@ if __name__ == "__main__":
     print("Saving the rmse result to csv file...")
     save_rmse(well_num, model_num, rmse)
 
+    tf.keras.backend.clear_session()
     ##########################################
     
