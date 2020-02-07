@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # Choose a well and model to train and infrenece
     print("Choosing well and model...")
 
-    for target_well in range(9, configs["data"]["num_wells"]+1):
+    for target_well in range(1, configs["data"]["num_wells"]+1):
         for target_model in range(1, configs["data"]["num_models"]+1):
             target_well = str(target_well)
             target_model = str(target_model)
