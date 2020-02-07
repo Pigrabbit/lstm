@@ -2,9 +2,6 @@ import scipy.io as sio
 import numpy as np
 import pandas as pd
 
-NUM_WELLS = 20
-NUM_MODELS = 104
-
 def load_data(data_dir):
     '''
     load .mat file and return the content
@@ -14,7 +11,7 @@ def load_data(data_dir):
     mat_content = sio.loadmat(data_dir)
     return mat_content['en_d'][0, 0]
 
-def read_data(data):
+def read_data(data, configs):
     '''
     read dataset and convert it to dictionary
     # INPUT: content of .mat file
@@ -34,12 +31,14 @@ def read_data(data):
         }
     }
     '''
+    num_wells = configs["data"]["num_wells"]
+    num_models = configs["data"]["num_models"]
     well_dic = {}
-    for well_index in range(NUM_WELLS):
+    for well_index in range(num_wells):
         model_dic = {}
         well_key = 'P' + str(well_index + 1)
 
-        for model_index in range(NUM_MODELS):    
+        for model_index in range(num_models):    
             well_data = np.array([
                 data['WOPR'][0, 0][well_key][:,model_index],
                 data['WBHP'][0, 0][well_key][:,model_index],
@@ -61,10 +60,10 @@ def read_data(data):
 
     return well_dic
 
-def choose_well_and_model(data_dic, well_num, model_num):
+def choose_well_and_model(data_dic, well, model):
     '''
     returns data of given well and model
     INPUT: dataset dictionary, well number as string, model_number as string
     OUTPUT: data in numpy.ndarray
     '''
-    return data_dic[well_num][model_num].values
+    return data_dic[well][model].values

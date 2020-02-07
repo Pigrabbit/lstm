@@ -1,12 +1,9 @@
-from sklearn.preprocessing import StandardScaler
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from math import sqrt
+from sklearn.metrics import mean_squared_error
 
-TRAIN_SPLIT = 150
-PAST_HISTORY = 5
-FUTURE_TARGET = 0
-STEP = 1
-
-def scale(dataset):
+def scale(dataset, configs):
     '''
     Scale the data set with Standard Scaler
     it gets mean and var from training set
@@ -14,8 +11,9 @@ def scale(dataset):
     INPUT: unscaled dataset
     OUTPUT: scaled dataset, scaler mean, scaler var
     '''
+    train_split = configs["data"]["train_split"]
     scaler = StandardScaler()
-    scaler.fit(dataset[:TRAIN_SPLIT])
+    scaler.fit(dataset[:train_split])
     dataset = scaler.transform(dataset)
     return dataset, scaler.mean_, scaler.var_
 
@@ -38,28 +36,34 @@ def multivariate_data(dataset, target, start_index, end_index, history_size, tar
 
     return np.array(data), np.array(labels)
 
-def get_train_set(dataset):
+def get_train_set(dataset, configs):
     x_train, y_train = multivariate_data(
         dataset=dataset,
         target=dataset[:, 0],
         start_index=0,
-        end_index=TRAIN_SPLIT,
-        history_size=PAST_HISTORY,
-        target_size=FUTURE_TARGET,
-        step=STEP,
+        end_index=configs["data"]["train_split"],
+        history_size=configs["data"]["input_sequence"],
+        target_size=configs["data"]["output_sequence"],
+        step=configs["data"]["step"],
         single_step=True
         )
     return x_train, y_train
 
-def get_val_set(dataset):
+def get_val_set(dataset, configs):
     x_val, y_val = multivariate_data(
         dataset=dataset,
         target=dataset[:, 0],
-        start_index=TRAIN_SPLIT,
+        start_index=configs["data"]["train_split"],
         end_index=None,
-        history_size=PAST_HISTORY,
-        target_size=FUTURE_TARGET,
-        step=STEP,
+        history_size=configs["data"]["input_sequence"],
+        target_size=configs["data"]["output_sequence"],
+        step=configs["data"]["step"],
         single_step=True
         )
     return x_val, y_val
+
+def get_inverse_scaled(scaled_val, scaler_mean, scaler_var):
+    return scaled_val * np.sqrt(scaler_var) + scaler_mean
+
+def get_rmse(y_true, y_predict):
+    return sqrt(mean_squared_error(y_true, y_predict))

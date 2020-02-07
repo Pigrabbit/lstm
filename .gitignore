@@ -1,4 +1,5 @@
 *.swp
+*.txt
 *.pyc
 *.png
 .env/*

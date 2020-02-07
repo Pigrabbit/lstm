@@ -2,13 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
-from data_reader import NUM_MODELS
 
-IMAGE_PATH = './images'
-
-def save_plot_single_well(dataset_dic, well_num, fig_extension='png', resolution=300):
-    title = f"WOPR_well_{well_num}"
-    image_dir = os.path.join(IMAGE_PATH, title + "." + fig_extension)
+def save_plot_single_well(dataset_dic, configs, well, fig_extension='png', resolution=300):
+    title = f"WOPR_well_{well}"
+    image_path = configs["image"]["image_path"]
+    image_dir = os.path.join(image_path, title + "." + fig_extension)
     if os.path.exists(image_dir):
         print("Plot already has been drawn and saved...")
     else:
@@ -18,7 +16,7 @@ def save_plot_single_well(dataset_dic, well_num, fig_extension='png', resolution
         ax.set_xlabel("date")
         ax.set_ylabel("WOPR")
         true_model_num = 104
-        for model_index in range(NUM_MODELS):
+        for model_index in range(configs["data"]["num_models"]):
             df = dataset_dic[str(well_num)][str(model_index + 1)]
             if ((model_index + 1) == true_model_num):
                 df.plot(y='WOPR', use_index=True, ax=ax, color='red', legend=False)
@@ -28,11 +26,13 @@ def save_plot_single_well(dataset_dic, well_num, fig_extension='png', resolution
         fig.savefig(image_dir, format=fig_extension, dpi=resolution)
         fig.clf()
     
-def save_train_history(history, title, fig_id, fig_extension='png', resolution=300):
+def save_train_history(history, configs, well, model, fig_extension='png', resolution=300):
     loss = history.history['loss']
     val_loss = history.history['val_loss']
-    
     epochs = range(len(loss))
+
+    title = f"Training and Validation loss of well_{well} model_{model}"
+    fig_id=f"w{well}_m{model}_history"
     
     fig = plt.figure()
     ax = fig.gca()
@@ -43,14 +43,18 @@ def save_train_history(history, title, fig_id, fig_extension='png', resolution=3
     ax.set_title(title)
     ax.legend()
     
-    image_dir = os.path.join(IMAGE_PATH, 'history', fig_id + "." + fig_extension)
+    image_path = configs["image"]["image_path"]
+    image_dir = os.path.join(image_path, 'history', fig_id + "." + fig_extension)
     fig.savefig(image_dir, format=fig_extension, dpi=resolution)
     fig.clf()
 
-def save_prediction(y_predict, y_true, y_train, title, fig_id, fig_extension='png', resolution=300):
+def save_prediction(y_predict, y_true, y_train, configs, well, model, fig_extension='png', resolution=300):
     y_train = y_train.reshape((-1, 1))
     y_predict = np.concatenate((y_train, y_predict), axis=None)
     y_true = np.concatenate((y_train, y_true.reshape((-1, 1))), axis=None)
+
+    title = f"WOPR prediction of well_{well} model_{model}"
+    fig_id=f"w{well}_m{model}_prediction"
     
     fig = plt.figure()
     ax = fig.gca()
@@ -61,6 +65,7 @@ def save_prediction(y_predict, y_true, y_train, title, fig_id, fig_extension='pn
     ax.set_title(title)
     ax.legend()
 
-    image_dir = os.path.join(IMAGE_PATH, 'prediction', fig_id + "." + fig_extension)
+    image_path = configs["image"]["image_path"]
+    image_dir = os.path.join(image_path, 'prediction', fig_id + "." + fig_extension)
     fig.savefig(image_dir, format=fig_extension, dpi=resolution)
     fig.clf()
