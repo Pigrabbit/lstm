@@ -69,3 +69,25 @@ def save_prediction(y_predict, y_true, y_train, configs, well, model, fig_extens
     image_dir = os.path.join(image_path, 'prediction', fig_id + "." + fig_extension)
     fig.savefig(image_dir, format=fig_extension, dpi=resolution)
     fig.clf()
+
+def save_total_prediction(y_predict, y_true, y_train, configs, well, model, fig_extension='png', resolution=300):
+    y_train = y_train.reshape((-1, 1))
+    # y_predict = np.concatenate((y_train, y_predict), axis=None)
+    y_true = np.concatenate((y_train, y_true.reshape((-1, 1))), axis=None)
+
+    title = f"WOPR prediction of well_{well} model_{model}"
+    fig_id=f"w{well}_m{model}_total_prediction"
+    
+    fig = plt.figure()
+    ax = fig.gca()
+    ax.plot(y_predict, linestyle='-', label='prediction')
+    ax.plot(y_true, linestyle='-', label='true')
+    ax.set_xlabel('date')
+    ax.set_ylabel('WOPR')
+    ax.set_title(title)
+    ax.legend()
+
+    image_path = configs["image"]["image_path"]
+    image_dir = os.path.join(image_path, 'prediction', fig_id + "." + fig_extension)
+    fig.savefig(image_dir, format=fig_extension, dpi=resolution)
+    fig.clf()

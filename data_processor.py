@@ -62,6 +62,19 @@ def get_val_set(dataset, configs):
         )
     return x_val, y_val
 
+def get_total_x(dataset, configs):
+    total_x, _ = multivariate_data(
+        dataset=dataset[:, :2],
+        target=dataset[:, 0],
+        start_index=0,
+        end_index=None,
+        history_size=configs["data"]["input_sequence"],
+        target_size=configs["data"]["output_sequence"],
+        step=configs["data"]["step"],
+        single_step=True
+        )
+    return total_x
+
 def get_inverse_scaled(scaled_val, scaler_min, scaler_scale):
     return (scaled_val - scaler_min) / scaler_scale
 

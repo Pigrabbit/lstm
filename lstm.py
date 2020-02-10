@@ -72,6 +72,9 @@ if __name__ == "__main__":
                 # Inference
                 print("Infernce getting started...")
                 y_hat = model.inference(lstm_model, x_val)
+
+                total_x = processor.get_total_x(scaled_dataset, configs)
+                y_hat_total = model.inference(lstm_model, total_x)
     
                 # Evaluate
                 print("Evaluate the model")
@@ -81,7 +84,10 @@ if __name__ == "__main__":
                 y_val_inverse = processor.get_inverse_scaled(y_val, scaler_min[0], scaler_scale[0])
                 y_train_inverse = processor.get_inverse_scaled(y_train, scaler_min[0], scaler_scale[0])
 
+                y_hat_total_inverse = processor.get_inverse_scaled(y_hat_total[:, -1], scaler_min[0], scaler_scale[0])
+
                 plotter.save_prediction(y_hat_inverse, y_val_inverse, y_train_inverse, configs, target_well, target_model)
+                plotter.save_total_prediction(y_hat_total_inverse, y_val_inverse, y_train_inverse, configs, target_well, target_model)
                 # Save results
                 print("Saving the rmse result to txt file...")
                 save_rmse(rmse, configs, target_well, target_model)
