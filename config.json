@@ -4,8 +4,8 @@
         "data_filename": "Brugge_en_d.mat",
         "num_wells": 20,
         "num_models": 104,
-        "train_split": 250,
-        "validation_split": 248,
+        "train_split": 150,
+        "validation_split": 348,
         "columns": [
             "WOPR",
             "WBHP",
@@ -21,13 +21,13 @@
         "batch_size": 32,
         "buffer_size": 10000,
         "workers": 8,
-        "es_patience": 40
+        "es_patience": 100
     },
     "model": {
         "optimizer": "adam",
         "loss": "mean_squared_error",
         "layers": {
-            "gaussian_std": 0.01,
+            "gaussian_std": 0.1,
             "lstm1_units": 50,
             "lstm2_units": 50,
             "activation": "relu",

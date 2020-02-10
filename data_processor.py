@@ -38,7 +38,7 @@ def multivariate_data(dataset, target, start_index, end_index, history_size, tar
 
 def get_train_set(dataset, configs):
     x_train, y_train = multivariate_data(
-        dataset=dataset,
+        dataset=dataset[:, :2],
         target=dataset[:, 0],
         start_index=0,
         end_index=configs["data"]["train_split"],
@@ -51,7 +51,7 @@ def get_train_set(dataset, configs):
 
 def get_val_set(dataset, configs):
     x_val, y_val = multivariate_data(
-        dataset=dataset,
+        dataset=dataset[:, :2],
         target=dataset[:, 0],
         start_index=configs["data"]["train_split"],
         end_index=None,
