@@ -4,8 +4,8 @@
         "data_filename": "Brugge_en_d.mat",
         "num_wells": 20,
         "num_models": 104,
-        "train_split": 150,
-        "validation_split": 348,
+        "train_split": 250,
+        "validation_split": 248,
         "columns": [
             "WOPR",
             "WBHP",

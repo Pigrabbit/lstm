@@ -19,6 +19,7 @@ def save_rmse(rmse, configs, well, model):
 if __name__ == "__main__":
     # Setup
     configs = json.load(open('config.json', 'r'))
+    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
     
     # Load and Read dataset
     print("Setting up dataset reader")
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     # Choose a well and model to train and infrenece
     print("Choosing well and model...")
 
-    for target_well in range(1, configs["data"]["num_wells"]+1):
+    for target_well in range(17, configs["data"]["num_wells"]+1):
         for target_model in range(1, configs["data"]["num_models"]+1):
             target_well = str(target_well)
             target_model = str(target_model)
@@ -38,9 +39,10 @@ if __name__ == "__main__":
                 # start process
                 print(f"Current Well: {target_well}, Model: {target_model}")
                 dataset = reader.choose_well_and_model(data_dic, target_well, target_model)
+                
                 # Preprocess the data according to LSTM architecture
                 print("Preprocessing data according to LSTM design...")
-                scaled_dataset, scaler_mean, scaler_var = processor.scale(dataset, configs)
+                scaled_dataset, scaler_min, scaler_scale = processor.scale(dataset, configs)
 
                 x_train, y_train = processor.get_train_set(scaled_dataset, configs)
                 x_val, y_val = processor.get_val_set(scaled_dataset, configs)
@@ -62,7 +64,6 @@ if __name__ == "__main__":
     
                 # Train and Fit the model
                 print("Start training the model...")
-                print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
                 lstm_model, lstm_history = model.fit_model(lstm_model, train_data, val_data, configs)
                 plotter.save_train_history(lstm_history, configs, target_well, target_model)
@@ -73,12 +74,13 @@ if __name__ == "__main__":
     
                 # Evaluate
                 print("Evaluate the model")
-                y_hat_inverse = processor.get_inverse_scaled(y_hat[:, -1], scaler_mean[0], scaler_var[0])
-                y_val_inverse = processor.get_inverse_scaled(y_val, scaler_mean[0], scaler_var[0])
-                y_train_inverse = processor.get_inverse_scaled(y_train, scaler_mean[0], scaler_var[0])
+                rmse = processor.get_rmse(y_val, y_hat[:, -1])
+                print(f"Test RMSE: {rmse}")
+                y_hat_inverse = processor.get_inverse_scaled(y_hat[:, -1], scaler_min[0], scaler_scale[0])
+                y_val_inverse = processor.get_inverse_scaled(y_val, scaler_min[0], scaler_scale[0])
+                y_train_inverse = processor.get_inverse_scaled(y_train, scaler_min[0], scaler_scale[0])
 
                 plotter.save_prediction(y_hat_inverse, y_val_inverse, y_train_inverse, configs, target_well, target_model)
-                rmse = processor.get_rmse(y_val_inverse, y_hat_inverse)
                 # Save results
                 print("Saving the rmse result to txt file...")
                 save_rmse(rmse, configs, target_well, target_model)

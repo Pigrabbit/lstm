@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from math import sqrt
 from sklearn.metrics import mean_squared_error
 
@@ -12,10 +12,10 @@ def scale(dataset, configs):
     OUTPUT: scaled dataset, scaler mean, scaler var
     '''
     train_split = configs["data"]["train_split"]
-    scaler = StandardScaler()
+    scaler = MinMaxScaler()
     scaler.fit(dataset[:train_split])
     dataset = scaler.transform(dataset)
-    return dataset, scaler.mean_, scaler.var_
+    return dataset, scaler.min_, scaler.scale_
 
 def multivariate_data(dataset, target, start_index, end_index, history_size, target_size, step, single_step=False):
     data = []
@@ -62,8 +62,8 @@ def get_val_set(dataset, configs):
         )
     return x_val, y_val
 
-def get_inverse_scaled(scaled_val, scaler_mean, scaler_var):
-    return scaled_val * np.sqrt(scaler_var) + scaler_mean
+def get_inverse_scaled(scaled_val, scaler_min, scaler_scale):
+    return (scaled_val - scaler_min) / scaler_scale
 
 def get_rmse(y_true, y_predict):
     return sqrt(mean_squared_error(y_true, y_predict))
