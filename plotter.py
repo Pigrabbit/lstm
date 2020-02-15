@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
-def save_plot_single_well(dataset_dic, configs, well, fig_extension='png', resolution=300):
+def save_plot_single_well(data_dic, configs, well, fig_extension='png', resolution=300):
     title = f"WOPR_well_{well}"
     image_path = configs["image"]["image_path"]
     image_dir = os.path.join(image_path, title + "." + fig_extension)
@@ -17,7 +17,7 @@ def save_plot_single_well(dataset_dic, configs, well, fig_extension='png', resol
         ax.set_ylabel("WOPR")
         true_model_num = 104
         for model_index in range(configs["data"]["num_models"]):
-            df = dataset_dic[str(well_num)][str(model_index + 1)]
+            df = data_dic[str(well)][str(model_index + 1)]
             if ((model_index + 1) == true_model_num):
                 df.plot(y='WOPR', use_index=True, ax=ax, color='red', legend=False)
             else:
