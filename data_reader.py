@@ -3,7 +3,7 @@ import scipy.io as sio
 import numpy as np
 import pandas as pd
 
-class Reader:
+class DataReader:
     NUM_PRODUCER_WELLS = 20
 
     def __init__(self, data_path, data_filename, num_model):

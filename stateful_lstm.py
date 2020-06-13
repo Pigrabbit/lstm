@@ -4,7 +4,7 @@ import random
 from absl import app
 from absl import flags
 
-from reader import Reader
+from data_reader import DataReader
 from preprocessor import Preprocessor
 from model_builder import ModelBuilder
 from history_logger import HistoryLogger
@@ -38,7 +38,7 @@ def main(argv=None):
 
     # Load data and preprocess data
     print("Loading data...")
-    data_reader = Reader(FLAGS.DATA_PATH, FLAGS.DATA_FILENAME, FLAGS.NUM_MODEL)
+    data_reader = DataReader(FLAGS.DATA_PATH, FLAGS.DATA_FILENAME, FLAGS.NUM_MODEL)
     well_dic = data_reader.create_well_dictionary()
 
     print("Preprocessing data...")
