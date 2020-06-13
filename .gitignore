@@ -4,3 +4,10 @@
 *.png
 .env/*
 *.ipynb_checkpoints
+*.sh
+
+.vscode/
+img/
+logs/
+result/
+
