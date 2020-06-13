@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from os.path import join as pjoin
 
 class Plotter:
-    _FIG_EXTENSION = "png"
-    _IMG_DIR = "img"
+    __FIG_EXTENSION = "png"
+    __IMG_DIR = "img"
 
     def __init__(self, epochs, well_to_learn, true_model):
         self._epochs = epochs
@@ -21,8 +21,8 @@ class Plotter:
         plt.title(f"Train and validation losses, well:{self._well_to_learn}")
         plt.legend(loc='best')
 
-        img_path = pjoin(self._IMG_DIR, f"well{self._well_to_learn}_losses.{self._FIG_EXTENSION}")
-        fig.savefig(img_path, format=self._FIG_EXTENSION, dpi=300)
+        img_path = pjoin(self.__IMG_DIR, f"well{self._well_to_learn}_losses.{self.__FIG_EXTENSION}")
+        fig.savefig(img_path, format=self.__FIG_EXTENSION, dpi=300)
         fig.clf()
 
     def plot_prediction(self, total_timestep, true_val, prediction_val):
@@ -37,6 +37,6 @@ class Plotter:
         plt.title(f"WOPR forecasting, well: {self._well_to_learn}  true model: {self._true_model}")
         plt.legend(loc='best')
 
-        img_path = pjoin(self._IMG_DIR, f"well{self._well_to_learn}_model{self._true_model}_prediction.{self._FIG_EXTENSION}")
-        fig.savefig(img_path, format=self._FIG_EXTENSION, dpi=300)
+        img_path = pjoin(self.__IMG_DIR, f"well{self._well_to_learn}_model{self._true_model}_prediction.{self.__FIG_EXTENSION}")
+        fig.savefig(img_path, format=self.__FIG_EXTENSION, dpi=300)
         fig.clf()
